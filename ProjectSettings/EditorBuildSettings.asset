@@ -1,0 +1,14 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Dice/scenes/Demo/demo.unity
+    guid: 3145ceaa0533d0943bc75eff43ce0895
+  - enabled: 1
+    path: Assets/Scenes/the last revelation.unity
+    guid: fffc368ce7c545240a157d1fa3ce0e97
+  m_configObjects: {}
