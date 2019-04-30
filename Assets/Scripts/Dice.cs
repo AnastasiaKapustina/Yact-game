@@ -17,10 +17,12 @@ namespace Game
         protected float rollTime = 0;
 
         private static ArrayList matNames = new ArrayList();
+        private static ArrayList materials = new ArrayList();
         private static ArrayList rollQueue = new ArrayList();
         private static ArrayList allDice = new ArrayList();
         private static ArrayList rollingDice = new ArrayList();
         
+        //Создаем префаб
         public static GameObject prefab(string name, Vector3 position, Vector3 rotation, Vector3 scale)
         {
             Object pf = Resources.Load("Prefabs/"+name);
@@ -40,14 +42,68 @@ namespace Game
             return null;
         }
 
-
-        public static void debug(object txt)
+        public static Material material(string matName)
         {
-            Debug.Log(txt);
+            Material mat = null;
+            int idx = matNames.IndexOf(matName);
+            if (idx < 0)
+            {
+                string[] a = matName.Split('-');
+                if (a.Length > 1)
+                {
+                    a[0] = a[0].ToLower();
+                    if (a[0].IndexOf("d") == 0)
+                        mat = (Material)Resources.Load("Materials/" + a[0] + "/" + matName);
+                }
+                if (mat == null) mat = (Material)Resources.Load("Materials/" + matName);
+                if (mat != null)
+                {
+                    matNames.Add(matName);
+                    materials.Add(mat);
+                }
+            }
+            else
+                mat = (Material)materials[idx];
+            return mat;
         }
 
+        public static void Roll(string dice, Vector3 spawnPoint, Vector3 force)
+        {
+            rolling = true;
+            dice = dice.ToLower();
+            int count = 1;
+            string dieType = "d6";
 
+            int p = dice.IndexOf("d");
 
+            if (p >= 0)
+            {
+                if (p > 0)
+                {
+                    string[] a = dice.Split('d');
+                    count = System.Convert.ToInt32(a[0]);
+                    if (a.Length > 1)
+                        dieType = "d" + a[1];
+                    else
+                        dieType = "d6";
+                }
+                else
+                    dieType = dice;
+
+                for (int d = 0; d < count; d++)
+                {
+
+                    GameObject die = prefab(dieType, spawnPoint, Vector3.zero, new Vector3(0.07f, 0.07f, 0.07f));
+                    die.transform.Rotate(new Vector3(Random.value * 360, Random.value * 360, Random.value * 360));
+                    die.SetActive(false);
+                    RollingDie rDie = new RollingDie(die, dieType, spawnPoint, force);
+                    allDice.Add(rDie);
+                    rollQueue.Add(rDie);
+                }
+            }
+        }
+
+        //Чяитаем кол-во костей определённого типа
         public static int Count(string dieType)
         {
             int v = 0;
@@ -156,6 +212,14 @@ namespace Game
             }
         }
 
+        public int value
+        {
+            get
+            {
+                return die.value;
+            }
+        }
+
         public RollingDie(GameObject gameObject, string name, Vector3 spawnPoint, Vector3 force)
         {
             this.gameObject = gameObject;
@@ -165,6 +229,13 @@ namespace Game
             die = (Die)gameObject.GetComponent(typeof(Die));
         }
 
-        
+        public void ReRoll()
+        {
+            if (name != "")
+            {
+                GameObject.Destroy(gameObject);
+                Dice.Roll(name, spawnPoint, force);
+            }
+        }
     }
 }
