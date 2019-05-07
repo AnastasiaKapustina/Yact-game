@@ -41,7 +41,21 @@ namespace Game
             SetMode(MODE_ROLL);
         }
 
-        private void SetMode(int pMode)
+        void MoveCamera() {
+
+           cameraMovement += Time.deltaTime* 1;
+
+           if (cameraMovement > cameraMovementSpeed)
+               cameraMovement = cameraMovementSpeed;
+
+           Camera.main.transform.position = Vector3.Slerp(startCameraPosition.transform.position, nextCameraPosition.transform.position, cameraMovement / cameraMovementSpeed);
+           Camera.main.transform.rotation = Quaternion.Slerp(startCameraPosition.transform.rotation, nextCameraPosition.transform.rotation, cameraMovement / cameraMovementSpeed);
+
+           if (cameraMovement == cameraMovementSpeed)
+               nextCameraPosition = null;
+       }
+
+    private void SetMode(int pMode)
         {
             if (nextCameraPosition != null || pMode == mode) return;
 
@@ -59,6 +73,13 @@ namespace Game
                     break;
             }
 
+            /*if (nextCameraPosition != null && mode == 0)
+           {
+               Camera.main.transform.position = nextCameraPosition.transform.position;
+               Camera.main.transform.rotation = nextCameraPosition.transform.rotation;
+               nextCameraPosition = null;
+           }*/
+
             mode = pMode;
             cameraMovement = 0;
         }
@@ -74,6 +95,26 @@ namespace Game
         {
             Dice.Clear();
             Dice.Roll("5d10", spawnPoint.transform.position, Force());
-        }
+            Gameplay.RollCount++;
+           if (Gameplay.RollCount > 1)
+           {
+               Gameplay.Score();
+           }
+           if (Gameplay.RollCount == 3)
+           {
+               GameObject.Find("Roll").GetComponent<Button>().interactable = false;
+           }
+            
+       }
+       public void NextStep()
+       {
+           GameObject.Find("Roll").GetComponent<Button>().interactable = true;
+           Dice.Clear();
+           Gameplay.NextStep();
+           foreach(var human in Gameplay.score1)
+           {
+               Debug.Log(human);
+           }
+       }
     }
 }

@@ -20,15 +20,30 @@ namespace Game
         }
 
         static Dictionary<int, int> values = new Dictionary<int, int>();
+        static public Dictionary<int, int> score1 = new Dictionary<int, int>();
+        static public Dictionary<int, int> score2 = new Dictionary<int, int>();
 
         static public int CurrentPlayer = 1;
+        static public int RollCount = 0;
         static public int SUMMARY_ROW = 17;
-       
+        static public int Steps = 1;
+        static public int MaxSteps = 30;
 
-        
+        static public void NextStep()
+        {
+            if (CurrentPlayer == 1)
+                CurrentPlayer = 2;
+            else CurrentPlayer = 1;
+            scoreCount();
+            RollCount = 0;
+            Steps++;            
+        }
+
         static public void updateScore(int id)
         {
-            LogArray(GameObject.Find("TableManager").GetComponent<Row>().enemies);
+            //LogArray(GameObject.Find("TableManager").GetComponent<Row>().enemies);
+            if ((CurrentPlayer == 1 && score1.ContainsKey(id)) || (CurrentPlayer == 2 && score2.ContainsKey(id)) || (Steps == MaxSteps))
+                return;
             int score = 0;
             values = Dice.GetValues();
             switch (id)
@@ -85,7 +100,49 @@ namespace Game
                     score = Chance();
                     break;
             }
-            
+            if (CurrentPlayer == 1)
+            {
+                int i = 0;
+                int sum = 0;
+                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                {
+                    if (score1.ContainsKey(i))
+                    {
+                        val.player1 = score1[i];
+                    }
+                    else
+                    {
+                        val.player1 = 0;
+                    }
+                    if (i != SUMMARY_ROW)
+                        sum += val.player1;
+                    i++;
+                }
+                GameObject.Find("TableManager").GetComponent<Row>().enemies[id].player1 = score;
+                GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player1 = sum + score;
+            }
+            else
+            {
+                int i = 0;
+                int sum = 0;
+                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                {
+                    if (score2.ContainsKey(i))
+                    {
+                        val.player2 = score2[i];
+                    }
+                    else
+                    {
+                        val.player2 = 0;
+                    }
+                    if (i != SUMMARY_ROW)
+                        sum += val.player2;
+                    i++;
+                }
+                GameObject.Find("TableManager").GetComponent<Row>().enemies[id].player2 = score;
+                GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player2 = sum + score;
+            }
+            //LogArray(GameObject.Find("TableManager").GetComponent<Row>().enemies);
         }
 
         static public void Score()
@@ -298,6 +355,18 @@ namespace Game
             {
                 Debug.Log(item.player1);
             }
+        }
+        public static GameObject FindObject(GameObject parent, string name)
+        {
+            Transform[] trs = parent.GetComponentsInChildren<Transform>(true);
+            foreach (Transform t in trs)
+            {
+                if (t.name == name)
+                {
+                    return t.gameObject;
+                }
+            }
+            return null;
         }
     }
 }
