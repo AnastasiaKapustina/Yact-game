@@ -19,6 +19,8 @@ namespace Game
 
         }
 
+        public GameObject EndText;
+
         static Dictionary<int, int> values = new Dictionary<int, int>();
         static public Dictionary<int, int> score1 = new Dictionary<int, int>();
         static public Dictionary<int, int> score2 = new Dictionary<int, int>();
@@ -36,9 +38,68 @@ namespace Game
             else CurrentPlayer = 1;
             scoreCount();
             RollCount = 0;
-            Steps++;            
+            Steps++;
+            if (Steps == MaxSteps)
+            {
+                var EndGO = FindObject(GameObject.Find("Canvas"), "End");
+                if (GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player1 > GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player2)
+                {
+                    EndGO.GetComponentInChildren<Text>().text = "Первый игрок победил!";
+
+                }
+                else if (GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player1 < GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player2)
+                {
+                    EndGO.GetComponentInChildren<Text>().text = "Второй игрок победил!";
+                }
+                else
+                {
+                    EndGO.GetComponentInChildren<Text>().text = "Ничья";
+                }
+                EndGO.SetActive(true);
+                GameObject.Find("Roll").SetActive(false);
+                GameObject.Find("NextStep").SetActive(false);
+
+            }
         }
 
+        static public void scoreCount()
+        {
+            if (CurrentPlayer == 1)
+            {
+                // CurrentPlayer = 2;
+
+                int i = 0;
+                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                {
+                    if (score1.ContainsKey(i))
+                    {
+                        score1[i] = val.player1;
+                    }
+                    else if (val.player1 > 0)
+                    {
+                        score1.Add(i, val.player1);
+                    }
+                    i++;
+                }
+            }
+            else
+            {
+                // CurrentPlayer = 1;
+                int i = 0;
+                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                {
+                    if (score2.ContainsKey(i))
+                    {
+                        score2[i] = val.player2;
+                    }
+                    else if (val.player2 > 0)
+                    {
+                        score2.Add(i, val.player2);
+                    }
+                    i++;
+                }
+            }
+        }
         static public void updateScore(int id)
         {
             //LogArray(GameObject.Find("TableManager").GetComponent<Row>().enemies);
@@ -165,7 +226,7 @@ namespace Game
                         sum += val.player1;
                     i++;
                 }
-               
+
             }
             else
             {
@@ -185,11 +246,12 @@ namespace Game
                         sum += val.player2;
                     i++;
                 }
-               
+
             }
         }
 
-        static public int Ones(){
+        static public int Ones()
+        {
 
             return values.ContainsKey(1) ? values[1] : 0;
         }
@@ -197,60 +259,60 @@ namespace Game
         static public int Twos()
         {
 
-            return values.ContainsKey(2) ? values[2]*2 : 0;
+            return values.ContainsKey(2) ? values[2] * 2 : 0;
         }
 
         static public int Threes()
         {
 
-            return values.ContainsKey(3) ? values[3]*3 : 0;
+            return values.ContainsKey(3) ? values[3] * 3 : 0;
         }
         static public int Fours()
         {
 
-            return values.ContainsKey(4) ? values[4]*4 : 0;
+            return values.ContainsKey(4) ? values[4] * 4 : 0;
         }
         static public int Fives()
         {
 
-            return values.ContainsKey(5) ? values[5]*5 : 0;
+            return values.ContainsKey(5) ? values[5] * 5 : 0;
         }
         static public int Sixes()
         {
-            
-            return values.ContainsKey(6) ? values[6]*6 : 0;
+
+            return values.ContainsKey(6) ? values[6] * 6 : 0;
         }
         static public int Sevens()
         {
 
-            return values.ContainsKey(7) ? values[7]*7 : 0;
+            return values.ContainsKey(7) ? values[7] * 7 : 0;
         }
         static public int Eights()
         {
 
-            return values.ContainsKey(8) ? values[8]*8 : 0;
+            return values.ContainsKey(8) ? values[8] * 8 : 0;
         }
         static public int Nines()
         {
 
-            return values.ContainsKey(9) ? values[9]*9 : 0;
+            return values.ContainsKey(9) ? values[9] * 9 : 0;
         }
         static public int Tens()
         {
 
-            return values.ContainsKey(10) ? values[10]*10 : 0;
+            return values.ContainsKey(10) ? values[10] * 10 : 0;
         }
         static public int ThreeOfKind()
         {
             var score = 0;
             foreach (var val in values)
             {
-               if(val.Value==3)
-                score = val.Key*3;
+                if (val.Value == 3)
+                    score = val.Key * 3;
             }
             return score;
         }
-        
+
         static public int FourOfKind()
         {
             var score = 0;
@@ -277,7 +339,8 @@ namespace Game
                         sq++;
                         if (sq == 3)
                             return 25;
-                    } else
+                    }
+                    else
                     {
                         break;
                     }
@@ -317,14 +380,14 @@ namespace Game
             bool flag2 = false;
             foreach (var val in values)
             {
-                    if (val.Value == 2)
-                    {
-                         flag1 = true;
-                    }
-                    if (val.Value == 3)
-                    {
-                        flag1 = true;
-                    }
+                if (val.Value == 2)
+                {
+                    flag1 = true;
+                }
+                if (val.Value == 3)
+                {
+                    flag1 = true;
+                }
             }
             return (flag1 && flag2) ? 30 : 0;
         }
@@ -345,13 +408,13 @@ namespace Game
             int sum = 0;
             foreach (var val in values)
             {
-                   sum+=val.Key* val.Value;
+                sum += val.Key * val.Value;
             }
             return sum;
         }
         static public void LogArray(List<Col> arr)
         {
-            foreach(var item in arr)
+            foreach (var item in arr)
             {
                 Debug.Log(item.player1);
             }
