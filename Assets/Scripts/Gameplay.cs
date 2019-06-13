@@ -31,6 +31,8 @@ namespace Game
         static public int Steps = 1;
         static public int MaxSteps = 30;
 
+        static public string dtype;
+
         static public void NextStep()
         {
             if (CurrentPlayer == 1)
@@ -42,12 +44,12 @@ namespace Game
             if (Steps == MaxSteps)
             {
                 var EndGO = FindObject(GameObject.Find("Canvas"), "End");
-                if (GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player1 > GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player2)
+                if (GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[SUMMARY_ROW].player1 > GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[SUMMARY_ROW].player2)
                 {
                     EndGO.GetComponentInChildren<Text>().text = "Первый игрок победил!";
 
                 }
-                else if (GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player1 < GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player2)
+                else if (GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[SUMMARY_ROW].player1 < GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[SUMMARY_ROW].player2)
                 {
                     EndGO.GetComponentInChildren<Text>().text = "Второй игрок победил!";
                 }
@@ -69,7 +71,7 @@ namespace Game
                 // CurrentPlayer = 2;
 
                 int i = 0;
-                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
                     if (score1.ContainsKey(i))
                     {
@@ -86,7 +88,7 @@ namespace Game
             {
                 // CurrentPlayer = 1;
                 int i = 0;
-                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
                     if (score2.ContainsKey(i))
                     {
@@ -102,70 +104,117 @@ namespace Game
         }
         static public void updateScore(int id)
         {
-            //LogArray(GameObject.Find("TableManager").GetComponent<Row>().enemies);
+            //LogArray(GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies);
             if ((CurrentPlayer == 1 && score1.ContainsKey(id)) || (CurrentPlayer == 2 && score2.ContainsKey(id)) || (Steps == MaxSteps))
                 return;
             int score = 0;
             values = Dice.GetValues();
-            switch (id)
+            if (dtype == "D10")
             {
-                case 0:
-                    score = Ones();
-                    break;
-                case 1:
-                    score = Twos();
-                    break;
-                case 2:
-                    score = Threes();
-                    break;
-                case 3:
-                    score = Fours();
-                    break;
-                case 4:
-                    score = Fives();
-                    break;
-                case 5:
-                    score = Sixes();
-                    break;
-                case 6:
-                    score = Sevens();
-                    break;
-                case 7:
-                    score = Eights();
-                    break;
-                case 8:
-                    score = Nines();
-                    break;
-                case 9:
-                    score = Tens();
-                    break;
-                case 10:
-                    score = ThreeOfKind();
-                    break;
-                case 11:
-                    score = FourOfKind();
-                    break;
-                case 12:
-                    score = SmallStraight();
-                    break;
-                case 13:
-                    score = BigStraight();
-                    break;
-                case 14:
-                    score = FullHouse();
-                    break;
-                case 15:
-                    score = Yacht();
-                    break;
-                case 16:
-                    score = Chance();
-                    break;
+                switch (id)
+                {
+                    case 0:
+                        score = Ones();
+                        break;
+                    case 1:
+                        score = Twos();
+                        break;
+                    case 2:
+                        score = Threes();
+                        break;
+                    case 3:
+                        score = Fours();
+                        break;
+                    case 4:
+                        score = Fives();
+                        break;
+                    case 5:
+                        score = Sixes();
+                        break;
+                    case 6:
+                        score = Sevens();
+                        break;
+                    case 7:
+                        score = Eights();
+                        break;
+                    case 8:
+                        score = Nines();
+                        break;
+                    case 9:
+                        score = Tens();
+                        break;
+                    case 10:
+                        score = ThreeOfKind();
+                        break;
+                    case 11:
+                        score = FourOfKind();
+                        break;
+                    case 12:
+                        score = SmallStraight();
+                        break;
+                    case 13:
+                        score = BigStraight();
+                        break;
+                    case 14:
+                        score = FullHouse();
+                        break;
+                    case 15:
+                        score = Yacht();
+                        break;
+                    case 16:
+                        score = Chance();
+                        break;
+                }
+            } else if (dtype == "D6")
+            {
+                switch (id)
+                {
+                    case 0:
+                        score = Ones();
+                        break;
+                    case 1:
+                        score = Twos();
+                        break;
+                    case 2:
+                        score = Threes();
+                        break;
+                    case 3:
+                        score = Fours();
+                        break;
+                    case 4:
+                        score = Fives();
+                        break;
+                    case 5:
+                        score = Sixes();
+                        break;                 
+                    case 6:
+                        score = ThreeOfKind();
+                        break;
+                    case 7:
+                        score = FourOfKind();
+                        break;
+                    case 8:
+                        score = SmallStraight();
+                        break;
+                    case 9:
+                        score = BigStraight();
+                        break;
+                    case 10:
+                        score = FullHouse();
+                        break;
+                    case 11:
+                        score = Yacht();
+                        break;
+                    case 12:
+                        score = Chance();
+                        break;
+                }
             }
             if (CurrentPlayer == 1)
             {
                 int i = 0;
                 int sum = 0;
-                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
                     if (score1.ContainsKey(i))
                     {
@@ -179,14 +228,14 @@ namespace Game
                         sum += val.player1;
                     i++;
                 }
-                GameObject.Find("TableManager").GetComponent<Row>().enemies[id].player1 = score;
-                GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player1 = sum + score;
+                GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[id].player1 = score;
+                GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[SUMMARY_ROW].player1 = sum + score;
             }
             else
             {
                 int i = 0;
                 int sum = 0;
-                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
                     if (score2.ContainsKey(i))
                     {
@@ -200,10 +249,9 @@ namespace Game
                         sum += val.player2;
                     i++;
                 }
-                GameObject.Find("TableManager").GetComponent<Row>().enemies[id].player2 = score;
-                GameObject.Find("TableManager").GetComponent<Row>().enemies[SUMMARY_ROW].player2 = sum + score;
+                GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[id].player2 = score;
+                GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies[SUMMARY_ROW].player2 = sum + score;
             }
-            //LogArray(GameObject.Find("TableManager").GetComponent<Row>().enemies);
         }
 
         static public void Score()
@@ -212,7 +260,7 @@ namespace Game
             {
                 int i = 0;
                 int sum = 0;
-                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
                     if (score1.ContainsKey(i))
                     {
@@ -232,7 +280,7 @@ namespace Game
             {
                 int i = 0;
                 int sum = 0;
-                foreach (var val in GameObject.Find("TableManager").GetComponent<Row>().enemies)
+                foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
                     if (score2.ContainsKey(i))
                     {

@@ -19,8 +19,12 @@ namespace Game
 
         public GameObject RollBtn;
         public GameObject NextBtn;
-        public GameObject Table;
+        public GameObject TableD6;
+        public GameObject TableD10;
         public GameObject spawnPoint;
+
+        private string dieType;
+        private GameObject MainTable;
 
 
 
@@ -36,7 +40,25 @@ namespace Game
                 MoveCamera();
         }
 
-        public void StartGame()
+        public void StartGameD10()
+        {
+            dieType = "d10";
+            MainTable = TableD10;
+            SetGame();
+            Gameplay.dtype = "D10";
+        }
+
+        public void StartGameD6()
+        {
+            dieType = "d6";
+            MainTable = TableD6;
+            SetGame();
+            Gameplay.dtype = "D6";
+            Gameplay.SUMMARY_ROW = 13;
+            Gameplay.MaxSteps = 22;
+        }
+
+        private void SetGame()
         {
             SetMode(MODE_ROLL);
         }
@@ -65,20 +87,14 @@ namespace Game
                 case MODE_ROLL:
                     startCameraPosition = camStart;
                     nextCameraPosition = camRoll;
-                    GameObject.Find("Start Game").SetActive(false);
+                    GameObject.Find("Start Game D6").SetActive(false);
+                    GameObject.Find("Start Game D10").SetActive(false);
                     GameObject.Find("SmallBoard").SetActive(false);
                     RollBtn.SetActive(true);
-                    Table.SetActive(true);
+                    MainTable.SetActive(true);
                     NextBtn.SetActive(true);
                     break;
             }
-
-            /*if (nextCameraPosition != null && mode == 0)
-           {
-               Camera.main.transform.position = nextCameraPosition.transform.position;
-               Camera.main.transform.rotation = nextCameraPosition.transform.rotation;
-               nextCameraPosition = null;
-           }*/
 
             mode = pMode;
             cameraMovement = 0;
@@ -94,7 +110,7 @@ namespace Game
         public void Roll()
         {
             Dice.Clear();
-            Dice.Roll("5d10", spawnPoint.transform.position, Force());
+            Dice.Roll("5"+ dieType, spawnPoint.transform.position, Force());
             Gameplay.RollCount++;
            if (Gameplay.RollCount > 1)
            {
