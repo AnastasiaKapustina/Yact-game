@@ -65,7 +65,7 @@ namespace Game
 
         void MoveCamera() {
 
-           cameraMovement += Time.deltaTime* 1;
+           cameraMovement += Time.deltaTime * 1;
 
            if (cameraMovement > cameraMovementSpeed)
                cameraMovement = cameraMovementSpeed;
