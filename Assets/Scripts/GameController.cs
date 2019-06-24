@@ -104,7 +104,6 @@ namespace Game
         {
             Vector3 rollTarget = Vector3.zero + new Vector3(2.47f + 1.35f * Random.value, 1.3f, 0.55f - 0.91f * Random.value);
             return Vector3.Lerp(spawnPoint.transform.position, rollTarget, 1).normalized * (6 - Random.value * 0);
-            // 
         }
 
         public void Roll()

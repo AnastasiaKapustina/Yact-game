@@ -68,8 +68,6 @@ namespace Game
         {
             if (CurrentPlayer == 1)
             {
-                // CurrentPlayer = 2;
-
                 int i = 0;
                 foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
@@ -86,7 +84,6 @@ namespace Game
             }
             else
             {
-                // CurrentPlayer = 1;
                 int i = 0;
                 foreach (var val in GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies)
                 {
@@ -104,7 +101,6 @@ namespace Game
         }
         static public void updateScore(int id)
         {
-            //LogArray(GameObject.Find("TableManager" + dtype).GetComponent<Row>().enemies);
             if ((CurrentPlayer == 1 && score1.ContainsKey(id)) || (CurrentPlayer == 2 && score2.ContainsKey(id)) || (Steps == MaxSteps))
                 return;
             int score = 0;
@@ -375,7 +371,6 @@ namespace Game
         static public int SmallStraight()
         {
             var score = 0;
-            int sqMax = 1;
             int sq = 1;
             foreach (var val in values)
             {
@@ -400,7 +395,6 @@ namespace Game
         static public int BigStraight()
         {
             var score = 0;
-            int sqMax = 1;
             int sq = 1;
             foreach (var val in values)
             {

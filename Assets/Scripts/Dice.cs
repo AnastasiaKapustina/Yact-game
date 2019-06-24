@@ -103,7 +103,7 @@ namespace Game
             }
         }
 
-        //Чяитаем кол-во костей определённого типа
+        // Считаем кол-во костей определённого типа
         public static int Count(string dieType)
         {
             int v = 0;

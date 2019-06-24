@@ -1,10 +1,4 @@
 sceneSetups:
-- path: Assets/Fantasy Wooden GUI  Free/Scene/Demo.unity
-  isLoaded: 0
-  isActive: 0
 - path: Assets/Scenes/the last revelation.unity
   isLoaded: 1
   isActive: 1
-- path: Assets/RuntimeGUITable/Examples/Scenes/ExampleScene.unity
-  isLoaded: 0
-  isActive: 0
